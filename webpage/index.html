@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Analysis</title>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <h1>Star Analysis</h1>
+    
+    <div>
+        <input type="text" id="starName" placeholder="Enter star name (e.g. Kepler-10)" value="Kepler-10">
+        <button onclick="analyzeStar()">Analyze</button>
+    </div>
+
+    <div id="chart" style="width:100%; max-width:900px; height:500px; margin-top:20px;"></div>
+    <div id="error" style="color: red; margin-top: 10px;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
