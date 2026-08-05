@@ -67,7 +67,15 @@
                 </div>
 
                 <div id="error" class="status-msg"></div>
+
+                <div id="view-toggles" class="view-toggles" style="display: none;">
+                    <button id="btn-folded" class="toggle-btn active" onclick="switchView('folded')">Phase-Folded Curve</button>
+                    <button id="btn-bls" class="toggle-btn" onclick="switchView('bls')">BLS Periodogram</button>
+                </div>
+
                 <div id="chart" class="chart-container"></div>
+
+                <div id="stats-grid" class="stats-grid"></div>
             </div>
         </section>
 

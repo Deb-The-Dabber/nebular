@@ -18,7 +18,7 @@ html {
     padding: 0 20px;
 }
 
-/* HERO SECTION (Real Cosmic Image + 55vh Compact Height) */
+/* HERO SECTION */
 .hero {
     position: relative;
     height: 55vh;
@@ -27,7 +27,6 @@ html {
     align-items: center;
     justify-content: center;
     text-align: center;
-    /* High-res NASA/Unsplash cosmic nebula photo */
     background: 
         linear-gradient(to bottom, rgba(7, 9, 19, 0.4), rgba(11, 13, 23, 0.95)),
         url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
@@ -53,7 +52,6 @@ html {
     letter-spacing: 1px;
 }
 
-/* CTA WRAPPER UNDER CITATION */
 .cta-wrapper {
     margin-top: 40px;
 }
@@ -188,9 +186,70 @@ html {
     font-weight: 500;
 }
 
+/* VIEW TOGGLE BUTTONS (Step 1c) */
+.view-toggles {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.toggle-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toggle-btn.active {
+    background-color: #38bdf8;
+    color: #0f172a;
+    border-color: #38bdf8;
+}
+
 .chart-container {
-    margin-top: 30px;
+    margin-top: 20px;
     min-height: 450px;
+}
+
+/* METADATA CARDS GRID (Step 1b) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.stat-card {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid #334155;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: #38bdf8;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 footer {

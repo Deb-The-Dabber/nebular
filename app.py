@@ -1,12 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import lightkurve as lk
+import numpy as np
 import warnings
 
-warnings.filterwarnings(
-    "ignore",
-    message=".*tpfmodel submodule.*"
-)
+warnings.filterwarnings("ignore", message=".*tpfmodel submodule.*")
 
 app = Flask(__name__)
 CORS(app)
@@ -16,24 +14,41 @@ def analyze_star():
     target = request.args.get('target', 'Kepler-10')
 
     try:
-        search = lk.search_lightcurve(target, mission = 'Kepler', author = "Kepler", quarter=1, cadence='long')
+        search = lk.search_lightcurve(target, mission='Kepler', author="Kepler", quarter=1, cadence='long')
         if len(search) == 0:
             return jsonify({"error": "No light curve data found for the specified target."}), 404
         lc = search.download()
 
         cleaned_lc = lc.remove_nans().remove_outliers(sigma=5).flatten(window_length=401)
+        
+        # BLS Periodogram calculation
         periodogram = cleaned_lc.to_periodogram(method='bls', minimum_period=0.5, maximum_period=15)
-        best_period = periodogram.period_at_max_power.value
-        folded_lc = cleaned_lc.fold(period=best_period)
+        best_period = float(periodogram.period_at_max_power.value)
+        best_depth = float(periodogram.depth_at_max_power.value)
+        best_duration = float(periodogram.duration_at_max_power.value)
 
-        time_points = folded_lc.time.value.tolist()
-        flux_points = folded_lc.flux.value.tolist()
+        # Derived metrics
+        planet_radius_earth = round(109.1 * np.sqrt(best_depth), 2)
+        depth_percentage = round(best_depth * 100, 3)
+
+        # Folded light curve
+        folded_lc = cleaned_lc.fold(period=best_period)
+        binned_lc = folded_lc.bin(time_bin_size=0.01).remove_nans()
 
         return jsonify({
             "target": target,
             "period": round(best_period, 4),
-            "time_points": time_points,
-            "flux_points": flux_points
+            "transit_depth": depth_percentage,
+            "transit_duration": round(best_duration * 24, 2),
+            "planet_radius": planet_radius_earth,
+            # Folded Light Curve Data
+            "time_points": folded_lc.time.value.tolist(),
+            "flux_points": folded_lc.flux.value.tolist(),
+            "binned_time": binned_lc.time.value.tolist(),
+            "binned_flux": binned_lc.flux.value.tolist(),
+            # BLS Periodogram Data (Step 1c)
+            "bls_periods": periodogram.period.value.tolist(),
+            "bls_powers": periodogram.power.value.tolist()
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500

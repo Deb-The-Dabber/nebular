@@ -1,4 +1,6 @@
-// Function called when user clicks the "Analyze" button
+// Store current global data object for chart switching
+let currentData = null;
+
 function analyzeStar() {
     const starInput = document.getElementById('starName').value.trim();
     const errorDiv = document.getElementById('error');
@@ -12,13 +14,11 @@ function analyzeStar() {
     fetchLightCurve(starInput);
 }
 
-// Function called when user clicks quick preset buttons (e.g. Kepler-10)
 function presetSearch(target) {
     document.getElementById('starName').value = target;
     analyzeStar();
 }
 
-// Fetch light curve data from the Flask API
 async function fetchLightCurve(starName) {
     const errorDiv = document.getElementById('error');
     errorDiv.innerText = '📡 Fetching and processing NASA light curve data...';
@@ -32,9 +32,14 @@ async function fetchLightCurve(starName) {
         }
 
         errorDiv.innerText = '';
-        console.log(`Detected Period for ${data.target}: ${data.period} days`);
+        currentData = data; // Save dataset locally
+
+        // Show toggle buttons
+        document.getElementById('view-toggles').style.display = 'flex';
         
-        renderChart(data.time_points, data.flux_points, data.target, data.period);
+        // Render Folded Curve & Metadata Cards
+        switchView('folded');
+        renderStats(data);
 
     } catch (error) {
         console.error('Error fetching light curve data:', error);
@@ -42,45 +47,102 @@ async function fetchLightCurve(starName) {
     }
 }
 
-// Render Plotly scatter plot with dark-space styling
-function renderChart(timePoints, fluxPoints, targetName, period) {
-    const trace = {
-        x: timePoints,
-        y: fluxPoints,
+// Toggle between Folded Transit and BLS Periodogram
+function switchView(viewType) {
+    if (!currentData) return;
+
+    const btnFolded = document.getElementById('btn-folded');
+    const btnBls = document.getElementById('btn-bls');
+
+    if (viewType === 'folded') {
+        btnFolded.classList.add('active');
+        btnBls.classList.remove('active');
+        renderFoldedChart(currentData);
+    } else {
+        btnBls.classList.add('active');
+        btnFolded.classList.remove('active');
+        renderBlsChart(currentData);
+    }
+}
+
+// Render Folded Light Curve Chart
+function renderFoldedChart(data) {
+    const rawTrace = {
+        x: data.time_points,
+        y: data.flux_points,
         mode: 'markers',
         type: 'scatter',
-        marker: {
-            size: 3,
-            color: '#38bdf8',
-            opacity: 0.6
-        },
-        name: targetName
+        name: 'Raw Flux',
+        marker: { size: 3, color: '#38bdf8', opacity: 0.35 }
+    };
+
+    const binnedTrace = {
+        x: data.binned_time,
+        y: data.binned_flux,
+        mode: 'lines',
+        type: 'scatter',
+        name: 'Binned Trend',
+        line: { color: '#f43f5e', width: 2.5 }
     };
 
     const layout = {
-        title: {
-            text: `${targetName} Folded Light Curve — Best Period: ${period} days`,
-            font: { color: '#f8fafc', size: 16 }
-        },
+        title: { text: `${data.target} Folded Light Curve — Best Period: ${data.period} days`, font: { color: '#f8fafc', size: 16 } },
         paper_bgcolor: '#0f172a',
         plot_bgcolor: '#0f172a',
-        xaxis: { 
-            title: { text: 'Phase (days)', font: { color: '#94a3b8' } },
-            tickfont: { color: '#94a3b8' },
-            gridcolor: '#1e293b',
-            zerolinecolor: '#475569'
-        },
-        yaxis: { 
-            title: { text: 'Normalized Flux', font: { color: '#94a3b8' } },
-            tickfont: { color: '#94a3b8' },
-            gridcolor: '#1e293b',
-            zerolinecolor: '#475569'
-        },
+        xaxis: { title: { text: 'Phase (days)', font: { color: '#94a3b8' } }, tickfont: { color: '#94a3b8' }, gridcolor: '#1e293b' },
+        yaxis: { title: { text: 'Normalized Flux', font: { color: '#94a3b8' } }, tickfont: { color: '#94a3b8' }, gridcolor: '#1e293b' },
         hovermode: 'closest',
         responsive: true
     };
 
-    Plotly.newPlot('chart', [trace], layout);
+    Plotly.newPlot('chart', [rawTrace, binnedTrace], layout);
+}
+
+// Render BLS Periodogram Chart (Step 1c)
+function renderBlsChart(data) {
+    const blsTrace = {
+        x: data.bls_periods,
+        y: data.bls_powers,
+        mode: 'lines',
+        type: 'scatter',
+        name: 'BLS Power',
+        line: { color: '#a855f7', width: 2 }
+    };
+
+    const layout = {
+        title: { text: `${data.target} Box-fitting Least Squares (BLS) Periodogram`, font: { color: '#f8fafc', size: 16 } },
+        paper_bgcolor: '#0f172a',
+        plot_bgcolor: '#0f172a',
+        xaxis: { title: { text: 'Period (days)', font: { color: '#94a3b8' } }, tickfont: { color: '#94a3b8' }, gridcolor: '#1e293b' },
+        yaxis: { title: { text: 'BLS Power Spectrum', font: { color: '#94a3b8' } }, tickfont: { color: '#94a3b8' }, gridcolor: '#1e293b' },
+        hovermode: 'closest',
+        responsive: true
+    };
+
+    Plotly.newPlot('chart', [blsTrace], layout);
+}
+
+// Render Metadata Cards (Step 1b)
+function renderStats(data) {
+    const statsGrid = document.getElementById('stats-grid');
+    statsGrid.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${data.period} d</div>
+            <div class="stat-label">Orbital Period</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.planet_radius} R⊕</div>
+            <div class="stat-label">Est. Planet Radius</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.transit_depth}%</div>
+            <div class="stat-label">Transit Depth</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.transit_duration} hrs</div>
+            <div class="stat-label">Transit Duration</div>
+        </div>
+    `;
 }
 
 function renderError(errorMessage) {
