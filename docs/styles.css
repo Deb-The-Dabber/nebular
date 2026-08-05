@@ -18,59 +18,67 @@ html {
     padding: 0 20px;
 }
 
-/* HERO SECTION (Nebula Background) */
+/* HERO SECTION (Real Cosmic Image + 55vh Compact Height) */
 .hero {
     position: relative;
-    height: 100vh;
+    height: 55vh;
+    min-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    /* Nebula gradient effect using CSS */
+    /* High-res NASA/Unsplash cosmic nebula photo */
     background: 
-        radial-gradient(circle at 50% 50%, rgba(120, 50, 255, 0.25), transparent 60%),
-        radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.2), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.15), transparent 50%),
-        #070913;
+        linear-gradient(to bottom, rgba(7, 9, 19, 0.4), rgba(11, 13, 23, 0.95)),
+        url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hero-content h1 {
-    font-size: 4rem;
-    letter-spacing: 8px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+    font-size: 3.8rem;
+    letter-spacing: 10px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #818cf8 100%);
     -webkit-background-clip: text;
-    background-clip: text; /* Added standard property to satisfy linter */
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 30px rgba(129, 140, 248, 0.3);
 }
 
 .tagline {
     font-size: 1.25rem;
     color: #94a3b8;
-    margin-bottom: 30px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* CTA WRAPPER UNDER CITATION */
+.cta-wrapper {
+    margin-top: 40px;
 }
 
 .btn-primary {
     display: inline-block;
-    padding: 12px 28px;
+    padding: 14px 32px;
     background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
     color: #fff;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1rem;
     border-radius: 30px;
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.7);
+    transform: translateY(-3px);
+    box-shadow: 0 0 35px rgba(99, 102, 241, 0.8);
 }
 
 /* CONTENT SECTIONS */
 .info-section {
-    padding: 80px 0;
+    padding: 60px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -110,8 +118,8 @@ html {
 
 /* APP SECTION */
 .app-section {
-    padding: 100px 0;
-    min-height: 100vh;
+    padding: 80px 0;
+    min-height: 80vh;
 }
 
 .search-box {
@@ -122,7 +130,7 @@ html {
 
 .search-box input {
     flex: 1;
-    padding: 12px 18px;
+    padding: 14px 18px;
     font-size: 1rem;
     border-radius: 8px;
     border: 1px solid #334155;
@@ -131,14 +139,23 @@ html {
     outline: none;
 }
 
+.search-box input:focus {
+    border-color: #38bdf8;
+}
+
 .search-box button {
-    padding: 12px 24px;
+    padding: 14px 28px;
     background-color: #38bdf8;
     color: #0f172a;
     border: none;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-box button:hover {
+    background-color: #7dd3fc;
 }
 
 .quick-presets {
@@ -154,9 +171,15 @@ html {
     background: none;
     border: 1px solid #334155;
     color: #38bdf8;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 6px;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-preset:hover {
+    background-color: #1e293b;
+    border-color: #38bdf8;
 }
 
 .status-msg {
