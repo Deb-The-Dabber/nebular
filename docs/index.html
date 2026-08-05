@@ -3,20 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Analysis</title>
-
+    <title>Nebular | Exoplanet Transit Finder</title>
+    
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Star Analysis</h1>
-    
-    <div>
-        <input type="text" id="starName" placeholder="Enter star name (e.g. Kepler-10)" value="Kepler-10">
-        <button onclick="analyzeStar()">Analyze</button>
-    </div>
 
-    <div id="chart" style="width:100%; max-width:900px; height:500px; margin-top:20px;"></div>
-    <div id="error" style="color: red; margin-top: 10px;"></div>
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>NEBULAR</h1>
+            <p class="tagline">Catching planets across the cosmos.</p>
+            <a href="#app-section" class="btn-primary">Launch Detection Tool</a>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="info-section">
+            <div class="container">
+                <h2>How It Works</h2>
+                <p>
+                    When an exoplanet passes in front of its host star, it blocks a tiny fraction of the star's light. 
+                    Nebular processes light curve time-series data, removes stellar variability, and uses 
+                    <strong>Box-fitting Least Squares (BLS)</strong> algorithms to detect periodic transit dips.
+                </p>
+            </div>
+        </section>
+
+        <section class="info-section citation">
+            <div class="container">
+                <h2>Data Attribution</h2>
+                <p>
+                    All photometric observations are retrieved directly from the public 
+                    <strong>NASA Kepler Mission</strong> archive using the <code>Lightkurve</code> python package.
+                </p>
+                <div class="badges">
+                    <span class="badge">NASA Kepler Archive</span>
+                    <span class="badge">STScI / MAST</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="app-section" class="app-section">
+            <div class="container">
+                <h2>Analyze a Star</h2>
+                <p>Enter a Kepler target ID to search for exoplanet signatures.</p>
+                
+                <div class="search-box">
+                    <input type="text" id="starName" placeholder="e.g. Kepler-10" value="Kepler-10">
+                    <button onclick="analyzeStar()">Analyze</button>
+                </div>
+
+                <div class="quick-presets">
+                    <span>Try preset:</span>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-10')">Kepler-10</button>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-8')">Kepler-8</button>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-12')">Kepler-12</button>
+                </div>
+
+                <div id="error" class="status-msg"></div>
+                <div id="chart" class="chart-container"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Built with Flask, Lightkurve, and Plotly.js | Open Source on GitHub</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>

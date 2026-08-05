@@ -15,6 +15,11 @@ async function fetchLightCurve(starName) {
     }
 }
 
+function presetSearch(target) {
+    document.getElementById('starName').value = target;
+    analyzeStar();
+}
+
 // Function called when user clicks the "Analyze" button
 function analyzeStar() {
     const starInput = document.getElementById('starName').value.trim();
