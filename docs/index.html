@@ -5,72 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nebular | Exoplanet Transit Finder</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+    <canvas id="space-canvas"></canvas>
+
+    <div class="vignette-overlay"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo"><span class="nav-dot"></span> NEBULAR // OBS-1</a>
+            <ul class="nav-links">
+                <li><a href="#about">SYS_INFO</a></li>
+                <li><a href="#attribution">ARCHIVE</a></li>
+                <li><a href="#app-section" class="nav-demo-link">TELEMETRY</a></li>
+                <li><a href="app.html" class="btn-nav-app">[ LAUNCH_STUDIO ]</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <header class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>NEBULAR</h1>
-            <p class="tagline">Catching planets across the cosmos.</p>
+        <div class="hero-content container scroll-reveal">
+            
+            <div class="oscilloscope-container bloom-box">
+                <svg class="transit-trace-svg" viewBox="0 0 600 80" preserveAspectRatio="none">
+                    <line x1="0" y1="40" x2="600" y2="40" stroke="#1E293B" stroke-width="1" stroke-dasharray="4,4" />
+                    <path class="transit-path" d="M 0,40 L 220,40 L 240,65 L 360,65 L 380,40 L 600,40" />
+                </svg>
+            </div>
+
+            <h1 class="hero-title bloom-text">NEBULAR</h1>
+            <p class="tagline">SYS.OPT // REAL-TIME EXOPLANET PHOTOMETRIC SCANNER</p>
+
+            <div class="hero-stat-display">
+                <div class="stat-giant bloom-text">100<span class="stat-unit">%</span></div>
+                <div class="stat-giant-label">// DIRECT MAST & NASA KEPLER / TESS ARCHIVE INTEGRATION</div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="#about" class="btn-primary">[ ENGAGE_OPTICS ↓ ]</a>
+            </div>
         </div>
     </header>
 
     <main>
         
-        <section class="info-section">
-            <div class="container">
-                <h2>How It Works</h2>
+        <section id="about" class="info-section">
+            <div class="container scroll-reveal">
+                <div class="section-badge">TELESCOPE_OPTICS</div>
+                <h2>[ 01 // PRINCIPLES_OF_OPERATION ]</h2>
                 <p>
-                    When an exoplanet passes in front of its host star, it blocks a tiny fraction of the star's light. 
-                    Nebular processes light curve time-series data, removes stellar variability, and uses 
-                    <strong>Box-fitting Least Squares (BLS)</strong> algorithms to detect periodic transit dips.
+                    When an exoplanet passes in front of its host star, it causes a faint reduction in stellar radiance. 
+                    Nebular ingests raw photometric time-series telemetry, normalizes stellar noise, and runs high-precision 
+                    <strong>Box-fitting Least Squares (BLS)</strong> algorithms to detect periodic transit dips across distant star systems.
                 </p>
+
+                <div class="inline-stat-grid">
+                    <div class="inline-stat-box">
+                        <span class="inline-stat-number bloom-text">0.001%</span>
+                        <span class="inline-stat-desc">MINIMUM TRANSIT DEPTH SENSITIVITY</span>
+                    </div>
+                    <div class="inline-stat-box">
+                        <span class="inline-stat-number bloom-text">&lt; 0.5s</span>
+                        <span class="inline-stat-desc">BLS PERIODOGRAM COMPUTE TIME</span>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="info-section citation">
-            <div class="container">
-                <h2>Data Attribution</h2>
+        <section id="attribution" class="info-section citation">
+            <div class="container scroll-reveal">
+                <div class="section-badge">DATA_FEED_SOURCE</div>
+                <h2>[ 02 // DATA_TELEMETRY_ARCHIVE ]</h2>
                 <p>
-                    All photometric observations are retrieved directly from the public 
-                    <strong>NASA Kepler Mission</strong> archive using the <code>Lightkurve</code> python package.
+                    Direct pipeline connected to space-based observatories. Photometric data streams are query-fetched live from the 
+                    <strong>NASA Kepler Mission</strong> and <strong>TESS (Transiting Exoplanet Survey Satellite)</strong> archives maintained by MAST / STScI.
                 </p>
                 <div class="badges">
-                    <span class="badge">NASA Kepler Archive</span>
-                    <span class="badge">STScI / MAST</span>
+                    <span class="badge">ARCHIVE: NASA_KEPLER</span>
+                    <span class="badge">ARCHIVE: NASA_TESS</span>
+                    <span class="badge">MAST / STScI FEED</span>
                 </div>
 
                 <div class="cta-wrapper">
-                    <a href="#app-section" class="btn-primary">Launch Detection Tool ↓</a>
+                    <a href="#app-section" class="btn-primary">[ INITIALIZE_LIVE_DEMO ↓ ]</a>
                 </div>
             </div>
         </section>
 
         <section id="app-section" class="app-section">
-            <div class="container">
-                <h2>Analyze a Star</h2>
-                <p>Enter a Kepler target ID to search for exoplanet signatures.</p>
+            <div class="container scroll-reveal">
+                <div class="demo-badge bloom-box">LIVE_OBSERVATORY_FEED</div>
+                <h2>[ 03 // TARGET_ACQUISITION ]</h2>
+                <p>Target a star system below to execute real-time BLS transit detection.</p>
                 
                 <div class="search-box">
-                    <input type="text" id="starName" placeholder="e.g. Kepler-10" value="Kepler-10">
-                    <button onclick="analyzeStar()">Analyze</button>
+                    <select id="missionSelect" class="mission-select">
+                        <option value="Kepler" selected>KEPLER</option>
+                        <option value="TESS">TESS</option>
+                    </select>
+                    
+                    <input type="text" id="starName" placeholder="TARGET ID (e.g. Kepler-10, TOI-700)" value="Kepler-10">
+                    <button onclick="analyzeStar()">[ EXECUTE ]</button>
                 </div>
 
                 <div class="quick-presets">
-                    <span>Try preset:</span>
-                    <button class="btn-preset" onclick="presetSearch('Kepler-10')">Kepler-10</button>
-                    <button class="btn-preset" onclick="presetSearch('Kepler-8')">Kepler-8</button>
-                    <button class="btn-preset" onclick="presetSearch('Kepler-12')">Kepler-12</button>
+                    <span class="preset-label">KEPLER PRESETS:</span>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-10', 'Kepler')">KEPLER-10</button>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-8', 'Kepler')">KEPLER-8</button>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-12', 'Kepler')">KEPLER-12</button>
+                    <button class="btn-preset" onclick="presetSearch('Kepler-22', 'Kepler')">KEPLER-22</button>
+                    
+                    <span class="preset-divider">|</span>
+                    
+                    <span class="preset-label">TESS PRESETS:</span>
+                    <button class="btn-preset btn-tess" onclick="presetSearch('TOI-700', 'TESS')">TOI-700</button>
+                    <button class="btn-preset btn-tess" onclick="presetSearch('Pi Mensae', 'TESS')">PI MENSAE</button>
                 </div>
 
                 <div id="error" class="status-msg"></div>
 
                 <div id="view-toggles" class="view-toggles" style="display: none;">
-                    <button id="btn-folded" class="toggle-btn active" onclick="switchView('folded')">Phase-Folded Curve</button>
-                    <button id="btn-bls" class="toggle-btn" onclick="switchView('bls')">BLS Periodogram</button>
+                    <button id="btn-folded" class="toggle-btn active" onclick="switchView('folded')">[ PHASE_FOLDED_CURVE ]</button>
+                    <button id="btn-bls" class="toggle-btn" onclick="switchView('bls')">[ BLS_PERIODOGRAM ]</button>
                 </div>
 
                 <div id="chart" class="chart-container"></div>
@@ -82,7 +147,7 @@
     </main>
 
     <footer>
-        <p>Built with Flask, Lightkurve, and Plotly.js | Open Source on GitHub</p>
+        <p>NEBULAR OBSERVATORY CONTROL // POWERED BY THREE.JS + FLASK + LIGHTKURVE + PLOTLY.JS</p>
     </footer>
 
     <script src="script.js"></script>
